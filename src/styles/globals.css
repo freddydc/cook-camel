@@ -1,0 +1,21 @@
+:root {
+  --main-bg: #2a3439;
+  --font-sans: 'Fira Sans', sans-serif;
+}
+
+html,
+body {
+  background-color: var(--main-bg);
+  font-family: var(--font-sans);
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

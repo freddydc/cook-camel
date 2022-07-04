@@ -1,7 +1,13 @@
+import { Route, Routes } from 'react-router-dom'
+import { Layout } from '../Layout'
+import { Home } from '../../pages'
+
 export function App() {
   return (
-    <h1 style={{ color: '#fff', display: 'flex', justifyContent: 'center' }}>
-      WELCOME
-    </h1>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+      </Route>
+    </Routes>
   )
 }

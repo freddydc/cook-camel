@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.title {
+  padding: 1rem 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}

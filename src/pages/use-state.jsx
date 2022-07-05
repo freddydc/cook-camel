@@ -1,8 +1,21 @@
 import styles from '../styles/Card.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const UseState = ({ name }) => {
-  const [error, setError] = useState(true)
+  const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        try {
+          setLoading(false)
+        } catch (err) {
+          setError(true)
+        }
+      }, 1000)
+    }
+  }, [loading])
 
   return (
     <div className={`${styles.card} ${error ? styles.error : ''}`}>
@@ -10,14 +23,15 @@ export const UseState = ({ name }) => {
         <h1>Delete {name}</h1>
       </div>
       <div>
+        {loading ? <h2>Loading...</h2> : null}
         {error ? <h2>Error the code is incorrect</h2> : null}
-        {!error ? <h2>Type the security code</h2> : null}
+        {!error && !loading ? <h2>Type the security code</h2> : null}
       </div>
       <div>
         <input placeholder="Cook..." />
       </div>
       <div>
-        <button onClick={() => setError(previousValue => !previousValue)}>
+        <button onClick={() => setLoading(previousValue => !previousValue)}>
           Check
         </button>
       </div>

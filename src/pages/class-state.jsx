@@ -1,6 +1,8 @@
 import styles from '../styles/Card.module.css'
 import { Component } from 'react'
 
+const KEY_GUARD = 'cook'
+
 class Message extends Component {
   componentWillUnmount() {
     console.log('COMPONENT WILL UNMOUNT')
@@ -16,7 +18,8 @@ export class ClassState extends Component {
     super(props)
 
     this.state = {
-      error: false,
+      inputData: '',
+      error: null,
       loading: false
     }
   }
@@ -29,9 +32,19 @@ export class ClassState extends Component {
     if (this.state.loading) {
       setTimeout(() => {
         try {
-          this.setState({ loading: false })
+          if (this.state.inputData === KEY_GUARD) {
+            this.setState({
+              loading: false,
+              error: null
+            })
+            return
+          }
+          throw new Error('Error the code is incorrect')
         } catch (err) {
-          this.setState({ error: true })
+          this.setState({
+            error: err.message,
+            loading: false
+          })
         }
       }, 1000)
     }
@@ -39,19 +52,29 @@ export class ClassState extends Component {
 
   render() {
     return (
-      <div className={`${styles.card} ${this.state.error ? styles.error : ''}`}>
+      <div
+        className={`${styles.card} ${
+          this.state.error && !this.state.loading ? styles.error : ''
+        }`}
+      >
         <div>
           <h1>Delete {this.props.name}</h1>
         </div>
         <div>
           {this.state.loading ? <Message /> : null}
-          {this.state.error ? <h2>Error the code is incorrect</h2> : null}
+          {this.state.error && !this.state.loading ? (
+            <h2>{this.state.error}</h2>
+          ) : null}
           {!this.state.error && !this.state.loading ? (
             <h2>Type the security code</h2>
           ) : null}
         </div>
         <div>
-          <input placeholder="Cook..." />
+          <input
+            placeholder="Cook..."
+            value={this.state.inputData}
+            onChange={e => this.setState({ inputData: e.target.value })}
+          />
         </div>
         <div>
           <button

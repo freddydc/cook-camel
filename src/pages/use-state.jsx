@@ -4,47 +4,73 @@ import { useEffect, useState } from 'react'
 const KEY_GUARD = 'cook'
 
 export const UseState = ({ name }) => {
-  const [inputData, setInputData] = useState('')
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [state, setState] = useState({
+    inputData: '',
+    loading: false,
+    error: null
+  })
 
   useEffect(() => {
-    if (loading) {
+    if (state.loading) {
       setTimeout(() => {
         try {
-          if (inputData === KEY_GUARD) {
-            setLoading(false)
-            setError(null)
+          if (state.inputData === KEY_GUARD) {
+            setState({
+              ...state,
+              loading: false,
+              error: null
+            })
             return
           }
           throw new Error('Error the code is incorrect')
         } catch (err) {
-          setError(err.message)
-          setLoading(false)
+          setState({
+            ...state,
+            error: err.message,
+            loading: false
+          })
         }
       }, 1000)
     }
-  }, [loading])
+  }, [state.loading])
 
   return (
-    <div className={`${styles.card} ${error && !loading ? styles.error : ''}`}>
+    <div
+      className={`${styles.card} ${
+        state.error && !state.loading ? styles.error : ''
+      }`}
+    >
       <div>
         <h1>Delete {name}</h1>
       </div>
       <div>
-        {loading ? <h2>Loading...</h2> : null}
-        {error && !loading ? <h2>{error}</h2> : null}
-        {!error && !loading ? <h2>Type the security code</h2> : null}
+        {state.loading ? <h2>Loading...</h2> : null}
+        {state.error && !state.loading ? <h2>{state.error}</h2> : null}
+        {!state.error && !state.loading ? (
+          <h2>Type the security code</h2>
+        ) : null}
       </div>
       <div>
         <input
           placeholder="Cook..."
-          value={inputData}
-          onChange={e => setInputData(e.target.value)}
+          value={state.inputData}
+          onChange={e =>
+            setState({
+              ...state,
+              inputData: e.target.value
+            })
+          }
         />
       </div>
       <div>
-        <button onClick={() => setLoading(previousValue => !previousValue)}>
+        <button
+          onClick={() =>
+            setState(previousValue => ({
+              ...state,
+              loading: !previousValue.loading
+            }))
+          }
+        >
           Check
         </button>
       </div>

@@ -12,26 +12,72 @@ export const UseState = ({ name }) => {
     deleted: false
   })
 
+  const handleConfirm = () => {
+    setState({
+      ...state,
+      loading: false,
+      error: null,
+      confirmed: true
+    })
+  }
+
+  const handleError = err => {
+    setState({
+      ...state,
+      error: err.message,
+      loading: false
+    })
+  }
+
+  const handleEntry = e => {
+    setState({
+      ...state,
+      inputData: e.target.value
+    })
+  }
+
+  const handleCheck = () => {
+    setState({
+      ...state,
+      loading: true
+    })
+  }
+
+  const handleDelete = () => {
+    setState({
+      ...state,
+      deleted: true
+    })
+  }
+
+  const handleCancel = () => {
+    setState({
+      ...state,
+      confirmed: false,
+      inputData: ''
+    })
+  }
+
+  const handleReset = () => {
+    setState({
+      ...state,
+      confirmed: false,
+      deleted: false,
+      inputData: ''
+    })
+  }
+
   useEffect(() => {
     if (state.loading) {
       setTimeout(() => {
         try {
           if (state.inputData === KEY_GUARD) {
-            setState({
-              ...state,
-              loading: false,
-              error: null,
-              confirmed: true
-            })
+            handleConfirm()
             return
           }
           throw new Error('Error the code is incorrect')
         } catch (err) {
-          setState({
-            ...state,
-            error: err.message,
-            loading: false
-          })
+          handleError(err)
         }
       }, 1000)
     }
@@ -59,25 +105,11 @@ export const UseState = ({ name }) => {
             <input
               placeholder="Cook..."
               value={state.inputData}
-              onChange={e =>
-                setState({
-                  ...state,
-                  inputData: e.target.value
-                })
-              }
+              onChange={handleEntry}
             />
           </div>
           <div>
-            <button
-              onClick={() =>
-                setState(previousValue => ({
-                  ...state,
-                  loading: !previousValue.loading
-                }))
-              }
-            >
-              Check
-            </button>
+            <button onClick={handleCheck}>Check</button>
           </div>
         </>
       ) : null}
@@ -91,27 +123,8 @@ export const UseState = ({ name }) => {
             <h2>Are you sure?</h2>
           </div>
           <div>
-            <button
-              onClick={() =>
-                setState({
-                  ...state,
-                  deleted: true
-                })
-              }
-            >
-              Ok
-            </button>
-            <button
-              onClick={() =>
-                setState({
-                  ...state,
-                  confirmed: false,
-                  inputData: ''
-                })
-              }
-            >
-              Cancel
-            </button>
+            <button onClick={handleDelete}>Ok</button>
+            <button onClick={handleCancel}>Cancel</button>
           </div>
         </>
       ) : null}
@@ -125,18 +138,7 @@ export const UseState = ({ name }) => {
             <h2>Recover {name}</h2>
           </div>
           <div>
-            <button
-              onClick={() =>
-                setState({
-                  ...state,
-                  confirmed: false,
-                  deleted: false,
-                  inputData: ''
-                })
-              }
-            >
-              Ok
-            </button>
+            <button onClick={handleReset}>Ok</button>
           </div>
         </>
       ) : null}

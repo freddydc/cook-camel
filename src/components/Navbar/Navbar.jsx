@@ -8,7 +8,7 @@ export const Navbar = () => {
         <Link to="/">Cook</Link>
         <Link to="/state">State</Link>
         <Link to="/class">Class</Link>
-        <Link to="">Reducer</Link>
+        <Link to="/reducer">Reducer</Link>
       </div>
     </header>
   )

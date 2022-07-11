@@ -11,13 +11,13 @@ export const UseReducer = ({ name }) => {
       setTimeout(() => {
         try {
           if (state.inputData === KEY_GUARD) {
-            dispatch({ type: 'VERIFY_KEY' })
+            dispatch({ type: actionTypes.verifyKey })
             return
           }
           throw new Error('Error the code is incorrect')
         } catch (err) {
           dispatch({
-            type: 'ERROR_MESSAGE',
+            type: actionTypes.errorMessage,
             payload: err.message
           })
         }
@@ -49,14 +49,16 @@ export const UseReducer = ({ name }) => {
               value={state.inputData}
               onChange={e =>
                 dispatch({
-                  type: 'GET_INPUT',
+                  type: actionTypes.getInput,
                   payload: e.target.value
                 })
               }
             />
           </div>
           <div>
-            <button onClick={() => dispatch({ type: 'SEND_VERIFY_KEY' })}>
+            <button
+              onClick={() => dispatch({ type: actionTypes.sendVerifyKey })}
+            >
               Check
             </button>
           </div>
@@ -72,10 +74,10 @@ export const UseReducer = ({ name }) => {
             <h2>Are you sure?</h2>
           </div>
           <div>
-            <button onClick={() => dispatch({ type: 'DELETE_DATA' })}>
+            <button onClick={() => dispatch({ type: actionTypes.deleteData })}>
               Ok
             </button>
-            <button onClick={() => dispatch({ type: 'UNDO_CHANGE' })}>
+            <button onClick={() => dispatch({ type: actionTypes.undoChange })}>
               Cancel
             </button>
           </div>
@@ -91,7 +93,7 @@ export const UseReducer = ({ name }) => {
             <h2>Recover {name}</h2>
           </div>
           <div>
-            <button onClick={() => dispatch({ type: 'RESET_CHANGE' })}>
+            <button onClick={() => dispatch({ type: actionTypes.resetChange })}>
               Ok
             </button>
           </div>
@@ -109,37 +111,47 @@ const initialState = {
   deleted: false
 }
 
+const actionTypes = {
+  verifyKey: 'VERIFY_KEY',
+  getInput: 'GET_INPUT',
+  sendVerifyKey: 'SEND_VERIFY_KEY',
+  resetChange: 'RESET_CHANGE',
+  deleteData: 'DELETE_DATA',
+  undoChange: 'UNDO_CHANGE',
+  errorMessage: 'ERROR_MESSAGE'
+}
+
 const reducerData = (state, payload) => ({
-  VERIFY_KEY: {
+  [actionTypes.verifyKey]: {
     ...state,
     loading: false,
     error: null,
     confirmed: true
   },
-  GET_INPUT: {
+  [actionTypes.getInput]: {
     ...state,
     inputData: payload
   },
-  SEND_VERIFY_KEY: {
+  [actionTypes.sendVerifyKey]: {
     ...state,
     loading: true
   },
-  RESET_CHANGE: {
+  [actionTypes.resetChange]: {
     ...state,
     confirmed: false,
     deleted: false,
     inputData: ''
   },
-  DELETE_DATA: {
+  [actionTypes.deleteData]: {
     ...state,
     deleted: true
   },
-  UNDO_CHANGE: {
+  [actionTypes.undoChange]: {
     ...state,
     confirmed: false,
     inputData: ''
   },
-  ERROR_MESSAGE: {
+  [actionTypes.errorMessage]: {
     ...state,
     error: payload,
     loading: false

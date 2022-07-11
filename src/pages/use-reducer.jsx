@@ -6,20 +6,55 @@ const KEY_GUARD = 'cook'
 export const UseReducer = ({ name }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const handleVerifyKey = () => {
+    dispatch({ type: actionTypes.verifyKey })
+  }
+
+  const handleGetInput = event => {
+    const {
+      target: { value }
+    } = event
+
+    dispatch({
+      type: actionTypes.getInput,
+      payload: value
+    })
+  }
+
+  const handleSendVerifyKey = () => {
+    dispatch({ type: actionTypes.sendVerifyKey })
+  }
+
+  const handleResetChange = () => {
+    dispatch({ type: actionTypes.resetChange })
+  }
+
+  const handleUndoChange = () => {
+    dispatch({ type: actionTypes.undoChange })
+  }
+
+  const handleDeleteData = () => {
+    dispatch({ type: actionTypes.deleteData })
+  }
+
+  const handleErrorMessage = error => {
+    dispatch({
+      type: actionTypes.errorMessage,
+      payload: error.message
+    })
+  }
+
   useEffect(() => {
     if (state.loading) {
       setTimeout(() => {
         try {
           if (state.inputData === KEY_GUARD) {
-            dispatch({ type: actionTypes.verifyKey })
+            handleVerifyKey()
             return
           }
           throw new Error('Error the code is incorrect')
         } catch (err) {
-          dispatch({
-            type: actionTypes.errorMessage,
-            payload: err.message
-          })
+          handleErrorMessage(err)
         }
       }, 1000)
     }
@@ -47,20 +82,11 @@ export const UseReducer = ({ name }) => {
             <input
               placeholder="Cook..."
               value={state.inputData}
-              onChange={e =>
-                dispatch({
-                  type: actionTypes.getInput,
-                  payload: e.target.value
-                })
-              }
+              onChange={handleGetInput}
             />
           </div>
           <div>
-            <button
-              onClick={() => dispatch({ type: actionTypes.sendVerifyKey })}
-            >
-              Check
-            </button>
+            <button onClick={handleSendVerifyKey}>Check</button>
           </div>
         </>
       ) : null}
@@ -74,12 +100,8 @@ export const UseReducer = ({ name }) => {
             <h2>Are you sure?</h2>
           </div>
           <div>
-            <button onClick={() => dispatch({ type: actionTypes.deleteData })}>
-              Ok
-            </button>
-            <button onClick={() => dispatch({ type: actionTypes.undoChange })}>
-              Cancel
-            </button>
+            <button onClick={handleDeleteData}>Ok</button>
+            <button onClick={handleUndoChange}>Cancel</button>
           </div>
         </>
       ) : null}
@@ -93,9 +115,7 @@ export const UseReducer = ({ name }) => {
             <h2>Recover {name}</h2>
           </div>
           <div>
-            <button onClick={() => dispatch({ type: actionTypes.resetChange })}>
-              Ok
-            </button>
+            <button onClick={handleResetChange}>Ok</button>
           </div>
         </>
       ) : null}
